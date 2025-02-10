@@ -164,10 +164,18 @@ extension Signals {
         
         engine.evaluate(script: SignalsRuntime.embeddedJS, evaluator: "Signals.prepare")
         
+        if configuration.useSwiftUIAutoSignal {
+            // needed for SwiftUI TabView's.
+            TabBarSwizzler.shared.start()
+            NavigationSwizzler.shared.start()
+            ModalSwizzler.shared.start()
+        }
+        
         #if os(iOS) || os(tvOS) || os(visionOS) || targetEnvironment(macCatalyst)
         if configuration.useUIKitAutoSignal {
-            _ = analytics?.add(plugin: SignalsScreenTracking())
-            _ = analytics?.add(plugin: SignalsTapTracking())
+            TabBarSwizzler.shared.start()
+            NavigationSwizzler.shared.start()
+            TapSwizzler.shared.start()
         }
         #endif
         
